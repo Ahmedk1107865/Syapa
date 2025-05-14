@@ -70,7 +70,7 @@ var callback = () => api.sendMessage({body:`➢ Admin and Bot Information
 ✧ Bot Admin: ${global.config.ADMINBOT}
 ♛ Bot Admin Link: UNLIMITED IDZ NO LINK
 ❂ Bot Prefix: ${global.config.PREFIX}
-✫ Bot Owner: 𝐂𝐇𝐔𝐙𝐀
+✫ Bot Owner: 𓆪⃝𝐒𝐘𝐀𝐏𝐀
 ➟ UPTIME
 ✬ Today is: ${juswa} 
 
