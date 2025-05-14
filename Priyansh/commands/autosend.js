@@ -1,13 +1,18 @@
+const schedule = require('node-schedule');
+const moment = require('moment-timezone');
+const chalk = require('chalk');
+
 module.exports.config = {
-name: "time",
-version: "10.02",
-hasPermssion: 0,
-credits: "Syapa",
-description: "Set Karne Ke Bad Automatically Msg Send Karega",
-commandCategory: "group messenger",
-usages: "[]",
-cooldowns: 3
+    name: 'autosent',
+    version: '10.0.0',
+    hasPermssion: 0,
+    credits: '𝐏𝐫𝐢𝐲𝐚𝐧𝐬𝐡 𝐑𝐚𝐣𝐩𝐮𝐭',
+    description: 'Set Karne Ke Bad Automatically Msg Send Karega',
+    commandCategory: 'group messenger',
+    usages: '[]',
+    cooldowns: 3
 };
+
 const nam = [{
 timer: "12:00:00 AM",
 message: ['──── •💖🌿• ────\n𝐈𝐭𝐬 10:00:𝐀𝐌\nوَلَوْلَا فَضْلُ اللَّهِ عَلَيْكُمْ وَرَحْمَتُهُ وَأَنَّ اللَّهَ تَوَّابٌ حَكِيمٌ\n\nاور اگر تم پر اللہ کا فضل اور اس کی رحمت نہ ہوتی (تو تم ایسے حالات میں زیادہ پریشان ہوتے) اور بیشک اللہ بڑا ہی توبہ قبول فرمانے والا بڑی حکمت والا ہے،\n──── •🌿  *★᭄𝗖𝗿𝗲𝗱𝗶𝘁𝘀  ཫ༄𒁍≛⃝𝐒𝐘𝐀𝐏𝐀💖• ────'] ,
@@ -104,8 +109,32 @@ message: ['──── •💖⭐• ────\n𝐈𝐭𝐬 8:00 𝐏𝐌\n
 timer: '11:00:00 PM',
 message: ['──── •💔🌿• ────\n𝐈𝐭𝐬 9:00 𝐏𝐌\nوَأَمَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ فَيُوَفِّيهِمْ أُجُورَهُمْ ۗ وَاللَّهُ لَا يُحِبُّ الظَّالِمِينَ\n\nاور جو لوگ ایمان لائے اور انہوں نے نیک عمل کئے تو (اﷲ) انہیں ان کا بھرپور اجر دے گا، اور اﷲ ظالموں کو پسند نہیں کرتا،\n──── •❤️  *★᭄𝗖𝗿𝗲𝗱𝗶𝘁𝘀  ཫ༄𒁍≛⃝𝐒𝐘𝐀𝐏𝐀 🌸• ────']
 }];
-module.exports.onLoad = o => setInterval(() => {
-const r = a => a[Math.floor(Math.random()*a.length)];
-if (á = nam.find(i => i.timer == new Date(Date.now()+25200000).toLocaleString().split(/,/).pop().trim())) global.data.allThreadID.forEach(i => o.api.sendMessage(r(á.message), i));
-}, 1000);
-module.exports.run = o => {}
+module.exports.onLoad = ({ api }) => {
+    console.log(chalk.bold.hex("#00c300")("============ SUCCESFULLY LOADED THE AUTOSENT COMMAND ============"));
+
+    messages.forEach(({ time, message }) => {
+        const [hour, minute, period] = time.split(/[: ]/);
+        let hour24 = parseInt(hour, 10);
+        if (period === 'PM' && hour !== '12') {
+            hour24 += 12;
+        } else if (period === 'AM' && hour === '12') {
+            hour24 = 0;
+        }
+
+        const scheduledTime = moment.tz({ hour: hour24, minute: parseInt(minute, 10) }, 'Asia/Kolkata').toDate();
+
+        schedule.scheduleJob(scheduledTime, () => {
+            global.data.allThreadID.forEach(threadID => {
+                api.sendMessage(message, threadID, (error) => {
+                    if (error) {
+                        console.error(`Failed to send message to ${threadID}:`, error);
+                    }
+                });
+            });
+        });
+    });
+};
+
+module.exports.run = () => {
+    // This function can be left empty as the main logic is handled in onLoad
+};
